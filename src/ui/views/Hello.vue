@@ -1,10 +1,10 @@
 <template>
   <div class="welcome-class">
-    <h2>{{$t("appTitle")}}</h2>
+    <h2 v-waitForT>{{$t("appTitle")}}</h2>
     <keep-alive>
       <div class="btn-wrapper">
-        <router-link class="hi" to="hello">{{$t("button1")}}</router-link>
-        <router-link class="bi" to="bye">{{$t("button2")}}</router-link>
+        <router-link class="hi" to="hello" v-waitForT>{{$t("button1")}}</router-link>
+        <p>{{$t("booo")}}</p>
       </div>
       <router-view></router-view>
     </keep-alive>

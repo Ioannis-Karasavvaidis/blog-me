@@ -10,9 +10,12 @@ export default () => {
       backend: {
         loadPath: '/locales/{{lng}}/{{ns}}.json',
         addPath: '/locales/add/{{lng}}/{{ns}}',
+        allowMultiLoading: false,
+        crossDomain: true,
       },
       debug: process.env.NODE_ENV === 'development',
       lng: 'en',
+      preload: ['en'],
       fallbackLng: 'en', // use en if detected lng is not available
       ns: ['translation'],
       defaultNS: 'translation',

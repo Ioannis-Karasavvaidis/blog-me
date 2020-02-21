@@ -28,7 +28,8 @@ i18next
   .init({
     preload: ['en'],
     fallbackLng: 'en',
-    ng: 'en',
+    lng: 'en',
+    initImmediate: true,
     saveMissing: true,
     debug: process.env.NODE_ENV === 'development',
     backend,
@@ -45,6 +46,7 @@ const app = express();
 // Set up all express middleware
 app.engine('html', handlebars.engine);
 app.set('view engine', 'html');
+app.use(middleware.handle(i18next));
 
 if (process.env.NODE_ENV === 'production') {
   app.set('views', './');
@@ -57,7 +59,6 @@ if (process.env.NODE_ENV === 'production') {
     }),
   );
   app.use('/locales', express.static('./locales/'));
-  app.use(middleware.handle(i18next));
 } else {
   app.set('views', './src/');
   app.use(

@@ -1,23 +1,35 @@
 import VueI18Next from '@panter/vue-i18next';
-import HelloWebpack from 'pages/Hello.vue';
-import routes from 'routes';
+import App from 'App.vue';
+import KeenUI from 'keen-ui';
+import routes from 'router';
+import log from 'shared/log';
+import store from 'store';
+import i18nextInit from 'utils/i18n';
 import Vue from 'vue';
 import VueResource from 'vue-resource';
 import VueRouter from 'vue-router';
+import { sync } from 'vuex-router-sync';
 
-import i18nextInit from './i18n';
+import 'keen-ui/dist/keen-ui.css';
+import 'app.scss';
 
+window.LOGGING = Boolean(process.env.LOGGING);
+
+const i18next = i18nextInit();
+Vue.use(VueI18Next);
+const i18n = new VueI18Next(i18next);
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes: routes.routes,
 });
 
-Vue.use(VueResource);
-// Vue.use(Store)
+router.beforeEach((to, from, next) => {
+  next();
+});
 
-Vue.use(VueI18Next);
-const i18next = i18nextInit();
-const i18n = new VueI18Next(i18next);
+Vue.use(VueResource);
+
+Vue.use(store);
 
 Vue.mixin({
   methods: {
@@ -27,18 +39,27 @@ Vue.mixin({
   },
 });
 
-new Vue({
-  i18n: i18n,
-  el: '#root',
-  router,
-  name: 'Blog Me',
-  render: h => h(HelloWebpack),
-  methods: {
-    _someMethodYouWant() {
-      console.log('Any method that you want to have!');
+Vue.use(KeenUI);
+
+// sync the router with the vuex store.
+// this registers `store.state.route`
+sync(store, router);
+
+i18next.on('initialized', function() {
+  new Vue({
+    i18n: i18n,
+    el: '#root',
+    router,
+    store,
+    name: 'Blog Me',
+    render: h => h(App),
+    methods: {
+      _someMethodYouWant() {
+        log('Any method that you want to have!');
+      },
     },
-  },
-  created() {
-    console.log('App created....');
-  },
+    created() {
+      log('App created....');
+    },
+  });
 });
